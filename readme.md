@@ -2,6 +2,8 @@
 
 GDID Extractor PoC and demonstration in Rust / C and Bof version.
 
+Full Research blog can be found here: https://zerotracelab.com/blog/gdid-windows-tracking  
+
 ## PoC BoF Output:- 
 
 > Executing BoF Code. 
