@@ -1,0 +1,33 @@
+# Aggressor Script binding for the get_gdid BOF.
+
+alias get_gdid {
+    local('$barch $bof $fh $data');
+    $barch = barch($1);
+    $bof   = script_resource("get_gdid. $+ $barch $+ .o");
+
+    if (!-exists $bof) {
+        berror($1, "get_gdid: object not found: $bof");
+        return;
+    }
+
+    $fh   = openf($bof);
+    $data = readb($fh, -1);
+    closef($fh);
+
+    btask($1, "Reading GDID from IdentityCRL");
+    beacon_inline_execute($1, $data, "go", "");
+}
+
+beacon_command_register(
+    "get_gdid",
+    "Print the Windows GDID / Passport Unique ID.",
+    "Reads HKCU\\SOFTWARE\\Microsoft\\IdentityCRL\\ExtendedProperties\\LID and\n" .
+    "reports:\n" .
+    "  - LID (16-hex on-disk form)\n" .
+    "  - PUID decimal (u64)\n" .
+    "  - Namespace class (0x0018 device, 0x0003 user)\n" .
+    "  - GDID string g:<decimal>\n\n" .
+    "Also lists MachineGuid, SQM MachineId, IDCRL version, SMBIOS strings,\n" .
+    "and every UserPUID_SID pair under HKLM IdentityCRL\\NegativeCache.\n\n" .
+    "Usage: get_gdid"
+);
